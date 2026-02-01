@@ -1,0 +1,9 @@
+txai.egg-info
+**/__pycache__/
+*.pkl
+.vscode
+.ipynb_checkpoints
+*.err
+*.out
+experiments/*/models/
+!experiments/freqshape/models
