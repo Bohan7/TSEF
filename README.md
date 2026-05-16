@@ -1,4 +1,4 @@
-# TSEF: Time Series Explanation Fooler
+# Exposing Vulnerabilities in Explanation for Time Series Classifiers via Dual-Target Attacks (ICML 2026)
 
 This repository contains the official implementation of **TSEF (Time Series Explanation Fooler)**, a novel adversarial attack method for exposing vulnerabilities in explanation for time series classifiers.
 
@@ -224,6 +224,19 @@ The attack evaluation includes:
 ## License
 
 This project is licensed under the MIT License.
+
+## Citation
+
+If you find this work useful, please cite our paper:
+
+```bibtex
+@article{wang2026exposing,
+  title={Exposing Vulnerabilities in Explanation for Time Series Classifiers via Dual-Target Attacks},
+  author={Wang, Bohan and Liu, Zewen and Lin, Lu and Liu, Hui and Xiong, Li and Jin, Ming and Jin, Wei},
+  journal={arXiv preprint arXiv:2602.02763},
+  year={2026}
+}
+```
 
 ## Acknowledgments
 
