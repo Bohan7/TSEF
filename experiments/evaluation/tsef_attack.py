@@ -361,8 +361,8 @@ def tsef_mask_attack(
 
 
 def tsef_mask_attack_ig(
-    predictor, model, X, gt_x, labels, y, times, 
-    eps=0.3, lambda_cls=0.1, lambda_exp=0.1, iters=1, 
+    predictor, model, X, gt_x, labels, original_labels, times,
+    eps=0.3, lambda_cls=0.1, lambda_exp=0.1, iters=1,
     min_X=-2.9198, max_X=2.9489,
     r_mt=0.5,  # sparsity hyperparameter for temporal mask
     k1=10, k2=10, lr_t=1.0, lr_f=1.0,
@@ -370,16 +370,16 @@ def tsef_mask_attack_ig(
 ):
     """
     TSEF Mask Attack for gradient-based explainers (e.g., Integrated Gradients).
-    
+
     Similar to tsef_mask_attack, but uses IG instead of mask-based explanations.
-    
+
     Args:
         predictor: Classification model
         model: Explanation model (unused for IG, kept for API consistency)
         X: Input time-series [T, B, D]
         gt_x: Ground truth explanations [T, B, D]
         labels: Target labels for attack [B]
-        y: Original labels [B]
+        original_labels: Original labels [B]
         times: Time indices [T, B]
         eps: Perturbation budget (epsilon)
         lambda_cls: Weight for classification loss
@@ -442,7 +442,7 @@ def tsef_mask_attack_ig(
             
             generated_exps_batch = IG_batch.attribute(
                 Xadv_batch,
-                target=y,
+                target=original_labels,
                 additional_forward_args=(times_batch, None, True),
                 n_steps=1,
                 internal_batch_size=None
@@ -511,7 +511,7 @@ def tsef_mask_attack_ig(
             
             generated_exps_batch_mf = IG_batch.attribute(
                 Xadv_batch_mf,
-                target=y,
+                target=original_labels,
                 additional_forward_args=(times_batch_mf, None, True),
                 n_steps=1,
                 internal_batch_size=None
