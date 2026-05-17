@@ -361,7 +361,7 @@ def tsef_mask_attack(
 
 
 def tsef_mask_attack_ig(
-    predictor, model, X, gt_x, labels, original_labels, times,
+    predictor, X, gt_x, labels, original_predictions, times,
     eps=0.3, lambda_cls=0.1, lambda_exp=0.1, iters=1,
     min_X=-2.9198, max_X=2.9489,
     r_mt=0.5,  # sparsity hyperparameter for temporal mask
@@ -375,11 +375,10 @@ def tsef_mask_attack_ig(
 
     Args:
         predictor: Classification model
-        model: Explanation model (unused for IG, kept for API consistency)
         X: Input time-series [T, B, D]
         gt_x: Ground truth explanations [T, B, D]
         labels: Target labels for attack [B]
-        original_labels: Original labels [B]
+        original_predictions: Predictor's predictions on the clean (unattacked) input, used as the IG target [B]
         times: Time indices [T, B]
         eps: Perturbation budget (epsilon)
         lambda_cls: Weight for classification loss
@@ -442,7 +441,7 @@ def tsef_mask_attack_ig(
             
             generated_exps_batch = IG_batch.attribute(
                 Xadv_batch,
-                target=original_labels,
+                target=original_predictions,
                 additional_forward_args=(times_batch, None, True),
                 n_steps=1,
                 internal_batch_size=None
@@ -511,7 +510,7 @@ def tsef_mask_attack_ig(
             
             generated_exps_batch_mf = IG_batch.attribute(
                 Xadv_batch_mf,
-                target=original_labels,
+                target=original_predictions,
                 additional_forward_args=(times_batch_mf, None, True),
                 n_steps=1,
                 internal_batch_size=None
@@ -1112,10 +1111,8 @@ def main(args):
                 )
 
         elif args.exp_method in ["ig", "dyna", "ig_batch", "ig_diff"]:
-            # For IG-based methods, explainer is not used but kept for API consistency
-            explainer = None
             X = tsef_mask_attack_ig(
-                transformer, explainer, X, gt_exps, target_labels, y, times,
+                transformer, X, gt_exps, target_labels, y, times,
                 eps=args.attack * (max_X - min_X),
                 iters=args.tsef_attack_iters, min_X=min_X, max_X=max_X,
                 lambda_cls=args.tsef_attack_lambda_cls, 
